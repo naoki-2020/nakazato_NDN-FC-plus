@@ -25,6 +25,7 @@
 #include "ndn-cxx/detail/packet-base.hpp"
 #include "ndn-cxx/encoding/block.hpp"
 #include "ndn-cxx/meta-info.hpp"
+#include "ndn-cxx/function.hpp"
 #include "ndn-cxx/name.hpp"
 #include "ndn-cxx/security/security-common.hpp"
 #include "ndn-cxx/signature-info.hpp"
@@ -132,6 +133,25 @@ public: // Data fields
   Data&
   setName(const Name& name);
 
+  const Function&
+  getFunction() const
+  {
+    return m_function;
+  }
+
+  void
+  setFunction(const Function& function) const
+  {
+    m_function = function;
+    m_wire.reset();
+  }
+
+  bool
+  hasFunction() const
+  {
+    return m_function.toUri() != "/" ? true : false;
+  }
+
   const Name&
   getFunction() const
   {
@@ -204,6 +224,9 @@ public: // Data fields
    */
   Data&
   setContent(const Block& block);
+
+  void
+  setContent2(const uint8_t* value, size_t valueSize) const;
 
   /**
    * @brief Set Content by copying from a raw buffer
@@ -335,6 +358,7 @@ protected:
 
 private:
   Name m_name;
+  mutable Function m_function;
   mutable Name m_function;
   MetaInfo m_metaInfo;
   mutable Block m_content;
